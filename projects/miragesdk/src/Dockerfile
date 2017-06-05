@@ -21,9 +21,9 @@ FROM ocaml/opam:alpine-3.5_ocaml-4.04.0 as sdk
 RUN git -C /home/opam/opam-repository pull && opam update -u
 
 COPY --from=capnp /usr/local/bin/capnp /usr/local/bin/
-COPY --from=capnp /usr/local/lib/libcapnpc-0.6-dev.so /usr/local/lib/
-COPY --from=capnp /usr/local/lib/libcapnp-0.6-dev.so /usr/local/lib/
-COPY --from=capnp /usr/local/lib/libkj-0.6-dev.so /usr/local/lib/
+COPY --from=capnp /usr/local/lib/libcapnpc-0.7-dev.so /usr/local/lib/
+COPY --from=capnp /usr/local/lib/libcapnp-0.7-dev.so /usr/local/lib/
+COPY --from=capnp /usr/local/lib/libkj-0.7-dev.so /usr/local/lib/
 
 RUN sudo mkdir -p /src
 USER opam
@@ -31,8 +31,14 @@ WORKDIR /src
 
 RUN opam pin add jbuilder 1.0+beta7 -n
 
+RUN opam pin add -yn capnp 'https://github.com/talex5/capnp-ocaml.git#interfaces'
+RUN opam pin add -yn capnp-rpc 'https://github.com/talex5/capnp-rpc.git#new-core'
+RUN opam pin add -yn capnp-rpc-lwt 'https://github.com/talex5/capnp-rpc.git#new-core'
+
 RUN opam depext -uiy cstruct lwt logs irmin-git rawlink tuntap astring rresult \
-    mirage-flow-lwt mirage-channel-lwt io-page decompress capnp
+    mirage-flow-lwt mirage-channel-lwt io-page decompress capnp mirage-flow-unix
+
+RUN opam install capnp-rpc-lwt
 
 RUN opam list
 
