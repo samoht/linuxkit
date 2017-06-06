@@ -4,7 +4,7 @@
  ((name sdk)
   (public_name sdk)
   (libraries (cstruct.lwt decompress irmin irmin-git lwt.unix rawlink
-              tuntap astring rresult mirage-flow-lwt capnp capnp-rpc-lwt
+              tuntap astring rresult mirage-flow-lwt capnp
               mirage-channel-lwt io-page.unix ipaddr))
  ))
 
