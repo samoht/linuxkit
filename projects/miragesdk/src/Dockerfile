@@ -35,6 +35,7 @@ RUN opam pin add jbuilder 1.0+beta7 -n
 RUN opam pin add -yn capnp 'https://github.com/talex5/capnp-ocaml.git#interfaces'
 RUN opam pin add -yn capnp-rpc 'https://github.com/talex5/capnp-rpc.git#new-core'
 RUN opam pin add -yn capnp-rpc-lwt 'https://github.com/talex5/capnp-rpc.git#new-core'
+RUN opam pin add -yn rawlink 'https://github.com/yomimono/rawlink.git#cstruct-ppx-tags'
 
 RUN opam depext -uiy cstruct lwt logs irmin-git rawlink tuntap astring rresult \
     mirage-flow-lwt mirage-channel-lwt io-page decompress capnp mirage-flow-unix cstruct-lwt
