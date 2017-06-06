@@ -21,6 +21,7 @@ FROM ocaml/opam:alpine-3.5_ocaml-4.04.0 as sdk
 RUN git -C /home/opam/opam-repository pull && opam update -u
 
 COPY --from=capnp /usr/local/bin/capnp /usr/local/bin/
+COPY --from=capnp /usr/local/bin/capnpc /usr/local/bin/
 COPY --from=capnp /usr/local/lib/libcapnpc-0.7-dev.so /usr/local/lib/
 COPY --from=capnp /usr/local/lib/libcapnp-0.7-dev.so /usr/local/lib/
 COPY --from=capnp /usr/local/lib/libkj-0.7-dev.so /usr/local/lib/
@@ -36,7 +37,7 @@ RUN opam pin add -yn capnp-rpc 'https://github.com/talex5/capnp-rpc.git#new-core
 RUN opam pin add -yn capnp-rpc-lwt 'https://github.com/talex5/capnp-rpc.git#new-core'
 
 RUN opam depext -uiy cstruct lwt logs irmin-git rawlink tuntap astring rresult \
-    mirage-flow-lwt mirage-channel-lwt io-page decompress capnp mirage-flow-unix
+    mirage-flow-lwt mirage-channel-lwt io-page decompress capnp mirage-flow-unix cstruct-lwt
 
 RUN opam install capnp-rpc-lwt
 
