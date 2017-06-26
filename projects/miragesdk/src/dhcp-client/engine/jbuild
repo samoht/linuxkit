@@ -1,0 +1,9 @@
+(jbuild_version 1)
+
+(executables
+ ((names (main))
+  (libraries (sdk mirage-net-fd lwt charrua-client.mirage charrua-client
+              lwt.unix cmdliner fmt.cli logs.fmt logs.cli fmt.tty
+              mirage-net-flow mirage-flow-unix))
+ ; (flags (:standard -cclib -static))
+ ))

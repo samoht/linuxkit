@@ -28,6 +28,7 @@ depends: [
   "mirage-flow-rawlink"
   "mirage-net-fd"
   "charrua-client"
+  "fd-send-recv"
   "mirage-types-lwt"
   "alcotest" {test}
 ]

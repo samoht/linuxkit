@@ -32,5 +32,7 @@ clean:
 	jbuilder clean
 
 dev:
-	jbuilder build dhcp-client/main.exe --dev
-	jbuilder build dhcp-client-calf/unikernel.exe --dev
+	jbuilder build dhcp-client/network/main.exe --dev
+	jbuilder build dhcp-client/engine/main.exe --dev
+	jbuilder build dhcp-client/actuator/main.exe --dev
+	jbuilder build dhcp-client/config/main.exe --dev

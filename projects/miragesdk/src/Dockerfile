@@ -37,8 +37,7 @@ RUN git -C /home/opam/opam-repository fetch origin && \
 RUN opam pin add -n capnp.dev 'https://github.com/talex5/capnp-ocaml.git#interfaces'
 RUN opam pin add -n capnp-rpc.dev 'https://github.com/mirage/capnp-rpc.git'
 RUN opam pin add -n capnp-rpc-lwt.dev 'https://github.com/mirage/capnp-rpc.git'
-RUN opam pin add -n charrua-client.dev https://github.com/samoht/charrua-client.git#with-cdhcpc
-RUN opam pin add -n mirage-flow-rawlink.dev https://github.com/mirage/mirage-flow-rawlink.git
+RUN opam pin add -n charrua-client.dev https://github.com/mirage/charrua-core.git
 RUN opam pin add -n mirage-flow-lwt --dev
 RUN opam pin add -n mirage-flow-unix --dev
 

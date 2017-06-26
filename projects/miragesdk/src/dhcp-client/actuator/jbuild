@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(executables
+ ((names (main))
+  (libraries (sdk cmdliner fmt.cli logs.fmt logs.cli fmt.tty))
+  ; (flags (:standard -cclib -static))
+))
