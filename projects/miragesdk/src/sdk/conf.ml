@@ -54,9 +54,9 @@ module Client (F: Mirage_flow_lwt.S) = struct
 
   let pp_error = Capnp_rpc.Error.pp
 
-  let connect ~switch f =
+  let connect ~switch ?tags f =
     let ep = Capnp_rpc_lwt.Endpoint.of_flow ~switch (module F) f in
-    let client = Capnp_rpc_lwt.CapTP.of_endpoint ~switch ep in
+    let client = Capnp_rpc_lwt.CapTP.of_endpoint ~switch ?tags ep in
     Capnp_rpc_lwt.CapTP.bootstrap client |> Lwt.return
 
   let find t path =
@@ -220,8 +220,8 @@ module Server = struct
             )
     end
 
-    let listen ~switch service flow fd =
+    let listen ~switch ?tags service flow fd =
       let endpoint = Capnp_rpc_lwt.Endpoint.of_flow ~switch flow fd in
-      ignore (Capnp_rpc_lwt.CapTP.of_endpoint ~switch ~offer:service endpoint)
+      ignore (Capnp_rpc_lwt.CapTP.of_endpoint ~switch ?tags ~offer:service endpoint)
 
 end

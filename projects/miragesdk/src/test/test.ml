@@ -122,6 +122,13 @@ let delete_should_work t k =
     (fun () -> Client.delete t k)
     (fun e  -> failf "write(%a) -> error: %a" pp_path k Fmt.exn e)
 
+let pp_actor f (style, name) = Fmt.(styled style (const string name)) f ()
+let unknown = `Black, "------"
+let actor_tag = Logs.Tag.def "actor" pp_actor
+
+let server_tags = Logs.Tag.(empty |> add actor_tag (`Red, "server"))
+let client_tags = Logs.Tag.(empty |> add actor_tag (`Green, "client"))
+
 let test_ctl path () =
   Lwt_switch.with_switch @@ fun switch ->
   IO.connect path >>= fun s ->
@@ -135,9 +142,9 @@ let test_ctl path () =
   Server.KV.v () >>= fun kv ->
   let _server =
     let service = Server.service ~switch ~routes kv in
-    Server.listen ~switch service (module IO) s
+    Server.listen ~switch ~tags:server_tags service (module IO) s
   in
-  Client.connect ~switch c >>= fun t ->
+  Client.connect ~switch ~tags:client_tags c >>= fun t ->
   let allowed k v =
     delete_should_work t k  >>= fun () ->
     read_should_none t k    >>= fun () ->
@@ -172,24 +179,39 @@ let test = [
   "conf"      , `Quick, run (test_ctl fifo);
 ]
 
+let pp_qid f = function
+  | None -> ()
+  | Some x ->
+    let s = Uint32.to_string x in
+    Fmt.(styled `Magenta (fun f x -> Fmt.pf f " (qid=%s)" x)) f s
+
 let reporter ?(prefix="") () =
   let pad n x =
     if String.length x > n then x
     else x ^ String.v ~len:(n - String.length x) (fun _ -> ' ')
   in
   let report src level ~over k msgf =
-    let k _ = over (); k () in
     let ppf = match level with Logs.App -> Fmt.stdout | _ -> Fmt.stderr in
-    let with_stamp h _tags k fmt =
+    let with_stamp h ?(tags=Logs.Tag.empty) k fmt =
+      let actor =
+        match Logs.Tag.find actor_tag tags with
+        | Some x -> x
+        | None -> unknown
+      in
+      let qid = Logs.Tag.find Capnp_rpc.Debug.qid_tag tags in
       let dt = Mtime.Span.to_us (Mtime_clock.elapsed ()) in
-      Fmt.kpf k ppf ("%s%+04.0fus %a %a @[" ^^ fmt ^^ "@]@.")
+      let k _ =
+        Fmt.(pf ppf) "%a@." pp_qid qid;
+        over (); k () in
+      Fmt.kpf k ppf ("%s%+04.0fus %a %a %a @[" ^^ fmt ^^ "@]")
         prefix
         dt
         Fmt.(styled `Magenta string) (pad 10 @@ Logs.Src.name src)
         Logs_fmt.pp_header (level, h)
+        pp_actor actor
     in
     msgf @@ fun ?header ?tags fmt ->
-    with_stamp header tags k fmt
+    with_stamp header ?tags k fmt
   in
   { Logs.report = report }
 

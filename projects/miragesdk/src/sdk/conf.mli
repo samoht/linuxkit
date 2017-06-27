@@ -14,7 +14,7 @@ module Client (F: Mirage_flow_lwt.S): sig
   type t
   (** The type for client state. *)
 
-  val connect: switch:Lwt_switch.t -> F.flow -> t Lwt.t
+  val connect: switch:Lwt_switch.t -> ?tags:Logs.Tag.set -> F.flow -> t Lwt.t
   (** [connect f] connects to the flow [f]. *)
 
   val find: t -> string list -> string option Lwt.t
@@ -70,7 +70,7 @@ module Server: sig
   type 'a flow = (module Mirage_flow_lwt.S with type flow = 'a)
   (** The type for MirageOS flows. *)
 
-  val listen: switch:Lwt_switch.t -> t -> 'a flow -> 'a -> unit
+  val listen: switch:Lwt_switch.t -> ?tags:Logs.Tag.set -> t -> 'a flow -> 'a -> unit
   (** [listen ~switch s m f] exposes service [s] on the flow
       [f]. [switch] can be used to stop the server. *)
 
