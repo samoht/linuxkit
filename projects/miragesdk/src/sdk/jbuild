@@ -4,8 +4,8 @@
  ((name sdk)
   (public_name sdk)
   (flags (:standard -w -53-55))
-  (libraries (cstruct-lwt irmin irmin-mem lwt.unix rawlink
-              tuntap astring rresult mirage-flow-lwt mirage-net-flow
+  (libraries (irmin irmin-mem lwt.unix rawlink
+              tuntap astring mirage-flow-lwt mirage-net-flow
               mirage-time-lwt mirage-flow-rawlink capnp capnp-rpc-lwt))))
 
 (rule
